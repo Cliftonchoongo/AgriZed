@@ -8,15 +8,17 @@ public class PriceEntry {
     private Commodity commodity;
     private Market market;
     private double price;
+    private String unit;
     private LocalDateTime dateSubmitted;
-    private String submittedById;
+    private String submittedBy;
 
-    public PriceEntry(String id, Commodity commodity, Market market, double price, String submittedById) {
+    public PriceEntry(String id, Commodity commodity, Market market, double price, String unit, String submittedBy) {
         this.id = id;
         this.commodity = commodity;
         this.market = market;
         this.price = price;
-        this.submittedById = submittedById;
+        this.unit = unit;
+        this.submittedBy = submittedBy;
         this.dateSubmitted = LocalDateTime.now();
     }
 
@@ -26,7 +28,7 @@ public class PriceEntry {
     public Market getMarket() { return market; }
     public double getPrice() { return price; }
     public LocalDateTime getDateSubmitted() { return dateSubmitted; }
-    public String getSubmittedById() { return submittedById; }
+    public String getSubmittedById() { return submittedBy; }
 
     // Setters
     public void setPrice(double price) { this.price = price; }
