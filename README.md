@@ -24,6 +24,6 @@ A Java backend system built with Javalin that monitors agricultural market price
 - **Abstraction** — abstract classes define contracts
 
 ## Team Members
-- Member 1
-- Member 2
-- Member 3
+- Clifton Choongo
+- Abraham Chamulwanda
+- Cleopatra Saniselo
