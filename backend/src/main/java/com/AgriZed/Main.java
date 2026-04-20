@@ -4,6 +4,7 @@ import com.AgriZed.api.CommodityController;
 import com.AgriZed.api.MarketController;
 import com.AgriZed.api.PriceController;
 import com.AgriZed.api.UserController;
+import com.AgriZed.exception.ApiException;
 import io.javalin.Javalin;
 
 public class Main {
@@ -21,8 +22,18 @@ public class Main {
 
         app.get("/", ctx -> ctx.result("AgriZed API is running!"));
 
+        // Handle custom API exceptions
+        app.exception(ApiException.class, (e, ctx) -> {
+            ctx.status(e.getStatusCode()).json(
+                    "{\"error\": \"" + e.getMessage() + "\", \"timestamp\": \"" + e.getTimestamp() + "\"}"
+            );
+        });
+
+        // Handle all other exceptions
         app.exception(Exception.class, (e, ctx) -> {
-            ctx.status(500).json("{\"error\": \"" + e.getMessage() + "\", \"timestamp\": \"" + java.time.LocalDateTime.now() + "\"}");
+            ctx.status(500).json(
+                    "{\"error\": \"" + e.getMessage() + "\", \"timestamp\": \"" + java.time.LocalDateTime.now() + "\"}"
+            );
         });
 
         System.out.println("AgriZed API started on port 7070");

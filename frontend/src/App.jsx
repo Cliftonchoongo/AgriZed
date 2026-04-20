@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Markets from './components/Markets'
 import Commodities from './components/Commodities'
 import Prices from './components/Prices'
+import Users from './components/Users'
 import './App.css'
 
 function App() {
@@ -16,13 +17,14 @@ function App() {
           <button onClick={() => setActivePage('markets')}>Markets</button>
           <button onClick={() => setActivePage('commodities')}>Commodities</button>
           <button onClick={() => setActivePage('prices')}>Prices</button>
+          <button onClick={() => setActivePage('users')}>Users</button>
         </nav>
       </header>
-
       <main>
         {activePage === 'markets' && <Markets />}
         {activePage === 'commodities' && <Commodities />}
         {activePage === 'prices' && <Prices />}
+        {activePage === 'users' && <Users />}
       </main>
     </div>
   )
