@@ -1,21 +1,31 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from 'react'
+import Markets from './components/Markets'
+import Commodities from './components/Commodities'
+import Prices from './components/Prices'
+import './App.css'
 
 function App() {
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    axios.get("http://localhost:7070/")
-        .then(res => setMessage(res.data))
-        .catch(err => setMessage("Backend not connected"));
-  }, []);
+  const [activePage, setActivePage] = useState('markets')
 
   return (
-      <div style={{ padding: "20px" }}>
-        <h1>AgriZed System</h1>
-        <p>{message}</p>
-      </div>
-  );
+    <div className="app">
+      <header>
+        <h1>🌾 AgriZed</h1>
+        <p>Agricultural Market Price Monitor</p>
+        <nav>
+          <button onClick={() => setActivePage('markets')}>Markets</button>
+          <button onClick={() => setActivePage('commodities')}>Commodities</button>
+          <button onClick={() => setActivePage('prices')}>Prices</button>
+        </nav>
+      </header>
+
+      <main>
+        {activePage === 'markets' && <Markets />}
+        {activePage === 'commodities' && <Commodities />}
+        {activePage === 'prices' && <Prices />}
+      </main>
+    </div>
+  )
 }
 
-export default App;
+export default App
