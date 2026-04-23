@@ -36,69 +36,108 @@ function Prices({ user }) {
   }
 
   const handleSubmit = async () => {
+    if (!form.id || !form.commodityId || !form.marketId || !form.price || !form.unit) {
+      setMessage('Please fill in all fields!')
+      return
+    }
     try {
       await axios.post(`${API}/prices`, {...form, price: parseFloat(form.price)})
-      setMessage('Price submitted!')
+      setMessage('Price submitted successfully!')
       fetchPrices()
       fetchCheapest()
-    } catch (err) { setMessage(err.response?.data?.error || 'Error submitting price') }
+    } catch (err) {
+      setMessage(err.response?.data?.error || 'Error submitting price')
+    }
   }
 
   return (
     <div>
       <div className="page-header">
-        <h1>💰 Prices</h1>
-        <p>Submit and view current market prices</p>
+        <h1>💰 Market Prices</h1>
+        <p>Current commodity prices across Zambian markets</p>
       </div>
 
-      <div className="form">
-        <h3>Submit Price</h3>
-        <input placeholder="Entry ID" value={form.id} onChange={e => setForm({...form, id: e.target.value})} />
-        <input placeholder="Commodity ID" value={form.commodityId} onChange={e => setForm({...form, commodityId: e.target.value})} />
-        <input placeholder="Market ID" value={form.marketId} onChange={e => setForm({...form, marketId: e.target.value})} />
-        <input placeholder="Price (ZMW)" value={form.price} onChange={e => setForm({...form, price: e.target.value})} />
-        <input placeholder="Unit" value={form.unit} onChange={e => setForm({...form, unit: e.target.value})} />
-        <input placeholder="Submitted By (User ID)" value={form.submittedBy} onChange={e => setForm({...form, submittedBy: e.target.value})} />
-        <button onClick={handleSubmit}>Submit Price</button>
-        {message && <p className="success-msg">{message}</p>}
-      </div>
+      {user?.role === 'FARMER' ? (
+        <div className="form">
+          <h3>➕ Submit Price</h3>
+          <input placeholder="Entry ID (e.g. p1)" value={form.id}
+            onChange={e => setForm({...form, id: e.target.value})} />
+          <input placeholder="Commodity ID" value={form.commodityId}
+            onChange={e => setForm({...form, commodityId: e.target.value})} />
+          <input placeholder="Market ID" value={form.marketId}
+            onChange={e => setForm({...form, marketId: e.target.value})} />
+          <input placeholder="Price (ZMW)" type="number" value={form.price}
+            onChange={e => setForm({...form, price: e.target.value})} />
+          <input placeholder="Unit (e.g. 50kg bag)" value={form.unit}
+            onChange={e => setForm({...form, unit: e.target.value})} />
+          <input placeholder="Your User ID" value={form.submittedBy}
+            onChange={e => setForm({...form, submittedBy: e.target.value})} />
+          <button onClick={handleSubmit}>Submit Price</button>
+          {message && <p className={message.includes('Error') || message.includes('only') ? 'error-response' : 'success-msg'}>{message}</p>}
+        </div>
+      ) : (
+        <div className="role-notice">
+          👁️ You have view-only access to prices
+        </div>
+      )}
 
       <div className="list">
-        <h3>Current Prices ({prices.length})</h3>
-        {loading && <p style={{textAlign:'center', color:'#999'}}>Loading...</p>}
+        <h3>📊 Current Market Prices ({prices.length})</h3>
+        {loading && <p style={{textAlign:'center', color:'#999', padding:'20px'}}>Loading prices...</p>}
         {prices.length === 0 && !loading && (
           <div className="empty-state">
-            <span style={{fontSize:'48px'}}>💰</span>
-            <p>No prices yet. Submit your first price!</p>
+            <span>💰</span>
+            <p>No prices submitted yet</p>
           </div>
         )}
         <div className="cards-grid">
           {prices.map((p, i) => (
-            <div key={i} className="card">
-              <h4>🌽 {p.commodity?.name}</h4>
-              <p>🏪 {p.market?.name}</p>
-              <p>💰 {p.formattedPrice}</p>
-              <span className="badge badge-green">Fresh</span>
+            <div key={i} className="price-card">
+              <div className="price-card-header">
+                <h4>🌽 {p.commodity?.name}</h4>
+                <p style={{opacity:0.8, fontSize:'12px', marginTop:'4px'}}>🏪 {p.market?.name}</p>
+              </div>
+              <div className="price-card-body">
+                <div className="price-amount">ZMW {p.price}</div>
+                <p style={{fontSize:'13px', color:'#666'}}>📦 {p.unit}</p>
+                <p style={{fontSize:'12px', color:'#999', marginTop:'8px'}}>
+                  {p.formattedPrice}
+                </p>
+              </div>
+              <div style={{padding:'10px 16px', background:'#f8f9ff', borderTop:'1px solid #e3f2fd', display:'flex', justifyContent:'space-between'}}>
+                <span className="badge badge-blue">Live</span>
+                <span style={{fontSize:'12px', color:'#999'}}>Fresh ✓</span>
+              </div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="list" style={{marginTop:'24px'}}>
-        <h3>Cheapest Markets 🏆</h3>
+      <div className="section-divider"></div>
+
+      <div className="list">
+        <h3>🏆 Cheapest Markets by Commodity</h3>
         {cheapest.length === 0 && (
           <div className="empty-state">
-            <span style={{fontSize:'48px'}}>🏆</span>
-            <p>No data yet</p>
+            <span>🏆</span>
+            <p>No price data available yet</p>
           </div>
         )}
         <div className="cards-grid">
           {cheapest.map((p, i) => (
-            <div key={i} className="card">
-              <h4>🥇 {p.commodity?.name}</h4>
-              <p>🏪 Cheapest at {p.market?.name}</p>
-              <p>💰 ZMW {p.price}</p>
-              <span className="badge badge-green">Best Price</span>
+            <div key={i} className="price-card">
+              <div className="price-card-header" style={{background:'linear-gradient(135deg, #1b5e20, #2e7d32)'}}>
+                <h4>🥇 {p.commodity?.name}</h4>
+                <p style={{opacity:0.8, fontSize:'12px', marginTop:'4px'}}>Best price available</p>
+              </div>
+              <div className="price-card-body">
+                <div className="price-amount">ZMW {p.price}</div>
+                <p style={{fontSize:'13px', color:'#555'}}>🏪 {p.market?.name}</p>
+                <p style={{fontSize:'12px', color:'#888', marginTop:'4px'}}>📍 {p.market?.town}</p>
+              </div>
+              <div style={{padding:'10px 16px', background:'#f9fdf9', borderTop:'1px solid #e8f5e9'}}>
+                <span className="badge badge-green">Best Price 🏆</span>
+              </div>
             </div>
           ))}
         </div>

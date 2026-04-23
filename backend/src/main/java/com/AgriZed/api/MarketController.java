@@ -23,6 +23,18 @@ public class MarketController {
             ctx.status(201).json(market);
         });
 
+        // DELETE /markets/{id} - Delete a market (Analyst only)
+        app.delete("/markets/{id}", ctx -> {
+            String id = ctx.pathParam("id");
+            Market market = store.findMarketById(id);
+            if (market == null) {
+                ctx.status(404).json("{\"error\": \"Market not found\"}");
+                return;
+            }
+            store.getMarkets().remove(market);
+            ctx.status(200).json("{\"message\": \"Market deleted successfully\"}");
+        });
+
         // GET /markets - Get all markets
         app.get("/markets", ctx -> {
             ctx.json(store.getMarkets());
