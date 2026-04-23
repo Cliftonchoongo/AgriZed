@@ -3,22 +3,29 @@ import axios from 'axios'
 
 const API = 'http://localhost:7070'
 
-function Prices() {
+function Prices({ user }) {
   const [prices, setPrices] = useState([])
   const [cheapest, setCheapest] = useState([])
-  const [form, setForm] = useState({ id: '', commodityId: '', marketId: '', price: '', unit: '', submittedBy: '' })
+  const [loading, setLoading] = useState(false)
+  const [form, setForm] = useState({
+    id: '', commodityId: '', marketId: '',
+    price: '', unit: '', submittedBy: ''
+  })
   const [message, setMessage] = useState('')
 
   useEffect(() => {
+    if (user) setForm(f => ({...f, submittedBy: user.id}))
     fetchPrices()
     fetchCheapest()
   }, [])
 
   const fetchPrices = async () => {
+    setLoading(true)
     try {
       const res = await axios.get(`${API}/prices/current`)
       setPrices(res.data)
     } catch (err) { setMessage('Error fetching prices') }
+    finally { setLoading(false) }
   }
 
   const fetchCheapest = async () => {
@@ -39,7 +46,11 @@ function Prices() {
 
   return (
     <div>
-      <h2>Prices</h2>
+      <div className="page-header">
+        <h1>💰 Prices</h1>
+        <p>Submit and view current market prices</p>
+      </div>
+
       <div className="form">
         <h3>Submit Price</h3>
         <input placeholder="Entry ID" value={form.id} onChange={e => setForm({...form, id: e.target.value})} />
@@ -49,29 +60,48 @@ function Prices() {
         <input placeholder="Unit" value={form.unit} onChange={e => setForm({...form, unit: e.target.value})} />
         <input placeholder="Submitted By (User ID)" value={form.submittedBy} onChange={e => setForm({...form, submittedBy: e.target.value})} />
         <button onClick={handleSubmit}>Submit Price</button>
-        {message && <p>{message}</p>}
+        {message && <p className="success-msg">{message}</p>}
       </div>
 
       <div className="list">
-        <h3>Current Prices</h3>
-        {prices.length === 0 && <p>No prices yet</p>}
-        {prices.map((p, i) => (
-          <div key={i} className="card">
-            <h4>{p.commodity?.name} @ {p.market?.name}</h4>
-            <p>{p.formattedPrice}</p>
+        <h3>Current Prices ({prices.length})</h3>
+        {loading && <p style={{textAlign:'center', color:'#999'}}>Loading...</p>}
+        {prices.length === 0 && !loading && (
+          <div className="empty-state">
+            <span style={{fontSize:'48px'}}>💰</span>
+            <p>No prices yet. Submit your first price!</p>
           </div>
-        ))}
+        )}
+        <div className="cards-grid">
+          {prices.map((p, i) => (
+            <div key={i} className="card">
+              <h4>🌽 {p.commodity?.name}</h4>
+              <p>🏪 {p.market?.name}</p>
+              <p>💰 {p.formattedPrice}</p>
+              <span className="badge badge-green">Fresh</span>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="list">
-        <h3>Cheapest Markets</h3>
-        {cheapest.length === 0 && <p>No data yet</p>}
-        {cheapest.map((p, i) => (
-          <div key={i} className="card">
-            <h4>{p.commodity?.name}</h4>
-            <p>Cheapest at {p.market?.name} — ZMW {p.price}</p>
+      <div className="list" style={{marginTop:'24px'}}>
+        <h3>Cheapest Markets 🏆</h3>
+        {cheapest.length === 0 && (
+          <div className="empty-state">
+            <span style={{fontSize:'48px'}}>🏆</span>
+            <p>No data yet</p>
           </div>
-        ))}
+        )}
+        <div className="cards-grid">
+          {cheapest.map((p, i) => (
+            <div key={i} className="card">
+              <h4>🥇 {p.commodity?.name}</h4>
+              <p>🏪 Cheapest at {p.market?.name}</p>
+              <p>💰 ZMW {p.price}</p>
+              <span className="badge badge-green">Best Price</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
