@@ -22,10 +22,23 @@ function Users() {
 
   const handleSubmit = async () => {
     try {
-      await axios.post(`${API}/users/register`, form)
+      const data = {
+        id: form.id,
+        name: form.name,
+        email: form.email,
+        province: form.province,
+        type: form.type,
+      }
+      if (form.type === 'farmer') data.farmLocation = form.farmLocation
+      if (form.type === 'buyer') data.companyName = form.companyName
+      if (form.type === 'analyst') data.organisation = form.organisation
+
+      await axios.post(`${API}/users/register`, data)
       setMessage('User registered!')
       fetchUsers()
-    } catch (err) { setMessage(err.response?.data?.error || 'Error registering user') }
+    } catch (err) {
+      setMessage(err.response?.data?.error || 'Error registering user')
+    }
   }
 
   return (
