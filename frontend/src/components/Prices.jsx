@@ -104,7 +104,7 @@ function Prices({ user }) {
                   {p.formattedPrice}
                 </p>
               </div>
-              <div style={{padding:'10px 16px', background:'#f8f9ff', borderTop:'1px solid #e3f2fd', display:'flex', justifyContent:'space-between'}}>
+              <div style={{padding:'10px 16px', background:'#29184c', borderTop:'1px solid #84a2b8', display:'flex', justifyContent:'space-between'}}>
                 <span className="badge badge-blue">Live</span>
                 <span style={{fontSize:'12px', color:'#999'}}>Fresh ✓</span>
               </div>

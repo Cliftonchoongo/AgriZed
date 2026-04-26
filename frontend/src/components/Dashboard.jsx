@@ -61,16 +61,20 @@ function Dashboard({ user, onLogout }) {
         </div>
 
         <nav className="sidebar-nav">
-          <button className={activePage === 'home' ? 'nav-btn active' : 'nav-btn'} onClick={() => setActivePage('home')}>
+          <button className={activePage === 'home' ? 'nav-btn active' : 'nav-btn'}
+            onClick={() => setActivePage('home')}>
             🏠 Dashboard
           </button>
-          <button className={activePage === 'markets' ? 'nav-btn active' : 'nav-btn'} onClick={() => setActivePage('markets')}>
+          <button className={activePage === 'markets' ? 'nav-btn active' : 'nav-btn'}
+            onClick={() => setActivePage('markets')}>
             🏪 Markets
           </button>
-          <button className={activePage === 'commodities' ? 'nav-btn active' : 'nav-btn'} onClick={() => setActivePage('commodities')}>
+          <button className={activePage === 'commodities' ? 'nav-btn active' : 'nav-btn'}
+            onClick={() => setActivePage('commodities')}>
             🌽 Commodities
           </button>
-          <button className={activePage === 'prices' ? 'nav-btn active' : 'nav-btn'} onClick={() => setActivePage('prices')}>
+          <button className={activePage === 'prices' ? 'nav-btn active' : 'nav-btn'}
+            onClick={() => setActivePage('prices')}>
             💰 Prices
           </button>
         </nav>
@@ -110,6 +114,19 @@ function Dashboard({ user, onLogout }) {
               </div>
             </div>
 
+            {/* Role based message */}
+            <div className="role-banner" style={{
+              background: roleColor[user.role],
+              color: 'white',
+              padding: '16px 24px',
+              borderRadius: '12px',
+              marginBottom: '24px'
+            }}>
+              {user.role === 'FARMER' && '🌱 As a Farmer you can add markets, commodities and submit prices.'}
+              {user.role === 'BUYER' && '🛒 As a Buyer you can view markets, commodities and current prices.'}
+              {user.role === 'ANALYST' && '📊 As an Analyst you have full read access to all market data.'}
+            </div>
+
             <div className="quick-actions">
               <h2>Quick Actions</h2>
               <div className="actions-grid">
@@ -135,8 +152,8 @@ function Dashboard({ user, onLogout }) {
             </div>
           </div>
         )}
-        {activePage === 'markets' && <Markets />}
-        {activePage === 'commodities' && <Commodities />}
+        {activePage === 'markets' && <Markets user={user} />}
+        {activePage === 'commodities' && <Commodities user={user} />}
         {activePage === 'prices' && <Prices user={user} />}
       </div>
     </div>
