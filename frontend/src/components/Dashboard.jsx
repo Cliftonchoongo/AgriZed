@@ -3,6 +3,12 @@ import axios from 'axios'
 import Markets from './Markets'
 import Commodities from './Commodities'
 import Prices from './Prices'
+import Profile from './Profile'
+
+<button className={activePage === 'profile' ? 'nav-btn active' : 'nav-btn'}
+  onClick={() => setActivePage('profile')}>
+  👤 My Profile
+</button>
 
 const API = 'http://localhost:7070'
 
@@ -10,6 +16,7 @@ function Dashboard({ user, onLogout }) {
   const [activePage, setActivePage] = useState('home')
   const [stats, setStats] = useState({ markets: 0, commodities: 0, prices: 0 })
 
+  
   useEffect(() => {
     fetchStats()
   }, [])
@@ -155,6 +162,7 @@ function Dashboard({ user, onLogout }) {
         {activePage === 'markets' && <Markets user={user} />}
         {activePage === 'commodities' && <Commodities user={user} />}
         {activePage === 'prices' && <Prices user={user} />}
+        {activePage === 'profile' && <Profile user={user} />}
       </div>
     </div>
   )

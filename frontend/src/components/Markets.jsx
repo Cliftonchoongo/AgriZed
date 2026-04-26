@@ -64,14 +64,38 @@ function Markets({ user }) {
           {message && <p className="success-msg">{message}</p>}
         </div>
       ) : (
-        <div className="role-notice">
-          👁️ You have view-only access to markets
+        <div style={{
+          background: 'linear-gradient(135deg, #e8f5e9, #f1f8e9)',
+          border: '1px solid #c8e6c9',
+          borderRadius: '14px',
+          padding: '20px 24px',
+          marginBottom: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '16px'
+        }}>
+          <span style={{fontSize: '40px'}}>🏪</span>
+          <div>
+            <p style={{fontWeight: '700', color: '#1a3a1a', fontSize: '15px'}}>
+              Market Directory
+            </p>
+            <p style={{color: '#555', fontSize: '13px', marginTop: '4px', lineHeight: '1.5'}}>
+              Browse all registered markets across Zambia.
+              {user?.role === 'FARMER' && ' As a Farmer you can view markets and submit prices.'}
+              {user?.role === 'BUYER' && ' As a Buyer you can browse markets and monitor prices.'}
+              {' '}Only Analysts can register or delete markets.
+            </p>
+          </div>
         </div>
       )}
 
       <div className="list">
         <h3>All Markets ({markets.length})</h3>
-        {loading && <p style={{textAlign:'center', color:'#999', padding:'20px'}}>Loading markets...</p>}
+        {loading && (
+          <p style={{textAlign:'center', color:'#999', padding:'20px'}}>
+            Loading markets...
+          </p>
+        )}
         {markets.length === 0 && !loading && (
           <div className="empty-state">
             <span>🏪</span>
@@ -83,7 +107,9 @@ function Markets({ user }) {
             <div key={m.id} className="market-card">
               <div className="market-card-header">
                 <h4>🏪 {m.name}</h4>
-                <p style={{opacity:0.8, fontSize:'12px', marginTop:'4px'}}>ID: {m.id}</p>
+                <p style={{opacity: 0.8, fontSize: '12px', marginTop: '4px'}}>
+                  ID: {m.id}
+                </p>
               </div>
               <div className="market-card-body">
                 <p>📍 <strong>Town:</strong> {m.town}</p>
@@ -92,7 +118,8 @@ function Markets({ user }) {
               <div className="market-card-footer">
                 <span className="badge badge-green">Active</span>
                 {user?.role === 'ANALYST' && (
-                  <button className="btn-delete" onClick={() => handleDelete(m.id)}>
+                  <button className="btn-delete"
+                    onClick={() => handleDelete(m.id)}>
                     🗑️ Delete
                   </button>
                 )}

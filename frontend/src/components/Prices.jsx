@@ -73,17 +73,46 @@ function Prices({ user }) {
           <input placeholder="Your User ID" value={form.submittedBy}
             onChange={e => setForm({...form, submittedBy: e.target.value})} />
           <button onClick={handleSubmit}>Submit Price</button>
-          {message && <p className={message.includes('Error') || message.includes('only') ? 'error-response' : 'success-msg'}>{message}</p>}
+          {message && (
+            <p className={
+              message.includes('Error') || message.includes('only')
+                ? 'error-response' : 'success-msg'
+            }>{message}</p>
+          )}
         </div>
       ) : (
-        <div className="role-notice">
-          👁️ You have view-only access to prices
+        <div style={{
+          background: 'linear-gradient(135deg, #e3f2fd, #e8eaf6)',
+          border: '1px solid #90caf9',
+          borderRadius: '14px',
+          padding: '20px 24px',
+          marginBottom: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '16px'
+        }}>
+          <span style={{fontSize: '40px'}}>💰</span>
+          <div>
+            <p style={{fontWeight: '700', color: '#1a3a1a', fontSize: '15px'}}>
+              Live Market Prices
+            </p>
+            <p style={{color: '#555', fontSize: '13px', marginTop: '4px', lineHeight: '1.5'}}>
+              View current commodity prices across all Zambian markets.
+              {user?.role === 'BUYER' && ' As a Buyer you can monitor prices and find the best deals.'}
+              {user?.role === 'ANALYST' && ' As an Analyst you can view and analyse all price trends.'}
+              {' '}Only Farmers can submit new prices.
+            </p>
+          </div>
         </div>
       )}
 
       <div className="list">
         <h3>📊 Current Market Prices ({prices.length})</h3>
-        {loading && <p style={{textAlign:'center', color:'#999', padding:'20px'}}>Loading prices...</p>}
+        {loading && (
+          <p style={{textAlign:'center', color:'#999', padding:'20px'}}>
+            Loading prices...
+          </p>
+        )}
         {prices.length === 0 && !loading && (
           <div className="empty-state">
             <span>💰</span>
@@ -95,18 +124,29 @@ function Prices({ user }) {
             <div key={i} className="price-card">
               <div className="price-card-header">
                 <h4>🌽 {p.commodity?.name}</h4>
-                <p style={{opacity:0.8, fontSize:'12px', marginTop:'4px'}}>🏪 {p.market?.name}</p>
+                <p style={{opacity: 0.8, fontSize: '12px', marginTop: '4px'}}>
+                  🏪 {p.market?.name}
+                </p>
               </div>
               <div className="price-card-body">
                 <div className="price-amount">ZMW {p.price}</div>
-                <p style={{fontSize:'13px', color:'#666'}}>📦 {p.unit}</p>
-                <p style={{fontSize:'12px', color:'#999', marginTop:'8px'}}>
+                <p style={{fontSize: '13px', color: '#666'}}>📦 {p.unit}</p>
+                <p style={{fontSize: '12px', color: '#999', marginTop: '8px'}}>
                   {p.formattedPrice}
                 </p>
               </div>
-              <div style={{padding:'10px 16px', background:'#29184c', borderTop:'1px solid #84a2b8', display:'flex', justifyContent:'space-between'}}>
+              <div style={{
+                padding: '10px 16px',
+                background: '#f8f9ff',
+                borderTop: '1px solid #e3f2fd',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
                 <span className="badge badge-blue">Live</span>
-                <span style={{fontSize:'12px', color:'#999'}}>Fresh ✓</span>
+                <span style={{fontSize: '12px', color: '#4caf50', fontWeight: '600'}}>
+                  ✓ Fresh
+                </span>
               </div>
             </div>
           ))}
@@ -126,16 +166,28 @@ function Prices({ user }) {
         <div className="cards-grid">
           {cheapest.map((p, i) => (
             <div key={i} className="price-card">
-              <div className="price-card-header" style={{background:'linear-gradient(135deg, #1b5e20, #2e7d32)'}}>
+              <div className="price-card-header" style={{
+                background: 'linear-gradient(135deg, #1b5e20, #2e7d32)'
+              }}>
                 <h4>🥇 {p.commodity?.name}</h4>
-                <p style={{opacity:0.8, fontSize:'12px', marginTop:'4px'}}>Best price available</p>
+                <p style={{opacity: 0.8, fontSize: '12px', marginTop: '4px'}}>
+                  Best price available
+                </p>
               </div>
               <div className="price-card-body">
                 <div className="price-amount">ZMW {p.price}</div>
-                <p style={{fontSize:'13px', color:'#555'}}>🏪 {p.market?.name}</p>
-                <p style={{fontSize:'12px', color:'#888', marginTop:'4px'}}>📍 {p.market?.town}</p>
+                <p style={{fontSize: '13px', color: '#555'}}>
+                  🏪 {p.market?.name}
+                </p>
+                <p style={{fontSize: '12px', color: '#888', marginTop: '4px'}}>
+                  📍 {p.market?.town}
+                </p>
               </div>
-              <div style={{padding:'10px 16px', background:'#f9fdf9', borderTop:'1px solid #e8f5e9'}}>
+              <div style={{
+                padding: '10px 16px',
+                background: '#f9fdf9',
+                borderTop: '1px solid #e8f5e9'
+              }}>
                 <span className="badge badge-green">Best Price 🏆</span>
               </div>
             </div>

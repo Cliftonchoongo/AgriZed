@@ -58,7 +58,7 @@ function Commodities({ user }) {
     <div>
       <div className="page-header">
         <h1>🌽 Commodities</h1>
-        <p>Agricultural commodities being traded</p>
+        <p>Agricultural commodities being traded across Zambia</p>
       </div>
 
       {user?.role === 'FARMER' ? (
@@ -92,14 +92,38 @@ function Commodities({ user }) {
           {message && <p className="success-msg">{message}</p>}
         </div>
       ) : (
-        <div className="role-notice">
-          👁️ You have view-only access to commodities
+        <div style={{
+          background: 'linear-gradient(135deg, #fff8e1, #fffde7)',
+          border: '1px solid #ffe082',
+          borderRadius: '14px',
+          padding: '20px 24px',
+          marginBottom: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '16px'
+        }}>
+          <span style={{fontSize: '40px'}}>🌽</span>
+          <div>
+            <p style={{fontWeight: '700', color: '#1a3a1a', fontSize: '15px'}}>
+              Commodity Catalogue
+            </p>
+            <p style={{color: '#555', fontSize: '13px', marginTop: '4px', lineHeight: '1.5'}}>
+              Browse all agricultural commodities being traded.
+              {user?.role === 'BUYER' && ' As a Buyer you can view commodities and monitor their prices across markets.'}
+              {user?.role === 'ANALYST' && ' As an Analyst you have full visibility into all commodity data.'}
+              {' '}Only Farmers can register new commodities.
+            </p>
+          </div>
         </div>
       )}
 
       <div className="list">
         <h3>All Commodities ({commodities.length})</h3>
-        {loading && <p style={{textAlign:'center', color:'#999', padding:'20px'}}>Loading commodities...</p>}
+        {loading && (
+          <p style={{textAlign:'center', color:'#999', padding:'20px'}}>
+            Loading commodities...
+          </p>
+        )}
         {commodities.length === 0 && !loading && (
           <div className="empty-state">
             <span>🌽</span>
@@ -111,14 +135,23 @@ function Commodities({ user }) {
             <div key={c.id} className="commodity-card">
               <div className={`commodity-card-header ${getTypeClass(c)}`}>
                 <h4>{getTypeIcon(c)} {c.name}</h4>
-                <p style={{opacity:0.8, fontSize:'12px', marginTop:'4px'}}>ID: {c.id}</p>
+                <p style={{opacity: 0.8, fontSize: '12px', marginTop: '4px'}}>
+                  ID: {c.id}
+                </p>
               </div>
               <div className="commodity-card-body">
                 <p>{c.description}</p>
                 <p>📦 Unit: <strong>{c.unit}</strong></p>
               </div>
-              <div style={{padding:'10px 16px', background:'#fafafa', borderTop:'1px solid #eee'}}>
-                <span className={`badge ${getTypeClass(c) === 'grain' ? 'badge-orange' : getTypeClass(c) === 'produce' ? 'badge-green' : 'badge-brown'}`}>
+              <div style={{
+                padding: '10px 16px',
+                background: '#fafafa',
+                borderTop: '1px solid #eee'
+              }}>
+                <span className={`badge ${
+                  getTypeClass(c) === 'grain' ? 'badge-orange' :
+                  getTypeClass(c) === 'produce' ? 'badge-green' : 'badge-brown'
+                }`}>
                   {getTypeLabel(c)}
                 </span>
               </div>
